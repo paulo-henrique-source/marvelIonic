@@ -50,7 +50,7 @@ export class PaginationComponent {
   public getCurrentPage(){
       return this.currentPage;
   }
-
+  
   public setCurrentPage(currentPage: number){
       if(currentPage > 0 && currentPage <= this.pages[this.pages.length - 1]){
           this.currentPage = currentPage;
