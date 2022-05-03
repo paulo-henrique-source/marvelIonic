@@ -37,4 +37,15 @@ export class ServiceService {
     return Md5.hashStr(ts + this.publicKey + this.privateKey);
   }
 
+  private getKeys(){
+    return new Promise((ret) => {
+      this.http.get('assets/keys.json').subscribe((keys:any) => {
+        this.publicKey  = keys.public;
+        this.privateKey = keys.private;
+
+        ret(true);
+      })
+    })
+  }
+
 }
