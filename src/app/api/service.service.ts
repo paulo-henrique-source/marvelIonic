@@ -19,12 +19,15 @@ export class ServiceService {
     let ts = this.generateTs();
     
     return new Promise((ret) => {
-      this.http.get(this.host + url + '?ts=' + ts + '&apikey=' + this.publicKey + '&hash=' + this.getHash(ts) + paramaters).subscribe((response) => {
-        if(response){
-          ret(response)
-        } else {
-          ret(false);
-        }
+      this.getKeys().then(_ => {
+
+        this.http.get(this.host + url + '?ts=' + ts + '&apikey=' + this.publicKey + '&hash=' + this.getHash(ts) + paramaters).subscribe((response) => {
+          if(response){
+            ret(response)
+          } else {
+            ret(false);
+          }
+        })
       })
     })
   }
