@@ -1,54 +1,72 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Md5} from 'ts-md5/dist/md5';
-
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ServiceService {
-  private publicKey   = '';
-  private privateKey  = '';
+  private publicKey = '';
+  private privateKey = '';
 
-  private host  = 'http://geteway.marvel.com';
+  private host = 'http://gateway.marvel.com/';
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {}
 
-  public getDados(url: string, paramaters: string){
+  getDados(url: string, parameters: string) {
     let ts = this.generateTs();
-    
-    return new Promise((ret) => {
-      this.getKeys().then(_ => {
 
-        this.http.get(this.host + url + '?ts=' + ts + '&apikey=' + this.publicKey + '&hash=' + this.getHash(ts) + paramaters).subscribe((response) => {
-          if(response){
-            ret(response)
-          } else {
-            ret(false);
-          }
-        })
-      })
-    })
+    return new Promise((ret) => {
+      this.getKeys().then((_) => {
+        this.http
+          .get(
+            this.host +
+              url +
+              '?ts=' +
+              ts +
+              '&apikey=' +
+              this.publicKey +
+              '&hash=' +
+              this.getHash(ts) +
+              parameters
+          )
+          .subscribe(
+            (response) => {
+              if (response) {
+                ret(response);
+              } else {
+                ret(false);
+              }
+            },
+            (erro) => {
+              ret(false);
+            }
+          );
+      });
+    });
   }
 
-  private generateTs(){
+  private generateTs() {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
-  private getHash(ts){
-    return Md5.hashStr(ts + this.publicKey + this.privateKey);
+  private getHash(ts) {
+    return Md5.hashStr(ts + this.privateKey + this.publicKey);
   }
 
-  private getKeys(){
+  private getKeys() {
     return new Promise((ret) => {
-      this.http.get('assets/keys.json').subscribe((keys:any) => {
-        this.publicKey  = keys.public;
-        this.privateKey = keys.private;
-
-        ret(true);
-      })
-    })
+      this.http.get('assets/keys.json').subscribe(
+        (keys: any) => {
+          this.publicKey = keys.public;
+          this.privateKey = keys.private;
+          ret(true);
+        },
+        (err) => {
+          alert('Chaves de acesso inválidas.');
+          ret(false);
+        }
+      );
+    });
   }
-
 }

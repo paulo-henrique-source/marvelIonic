@@ -7,6 +7,10 @@
   z-index: 1000;
 }
 
+.fullHeight {
+  height: 82vh;
+}
+
 .page-title {
   text-align: center;
   color: var(--dark-smoke);
@@ -112,6 +116,7 @@
 @media(min-width: 768px){
   .frame-list{
     margin-bottom: 0px!important;
+    display: grid;
   }
   
   .class-md-none{
